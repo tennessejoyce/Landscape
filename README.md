@@ -1,5 +1,5 @@
 # Landscape
-The goal of this project was to create and analyze a dataset of landscape photos scraped from reddit, mostly for curiosity about what kinds of images redditors are posting and upvoting in this subreddit.
+The goal of this project was to create and analyze a dataset of landscape images scraped from reddit, mostly for curiosity about what kinds of images redditors are posting and upvoting.
 The repository contains three python scripts (download_images.py, image_recognition.py, and analyze.py) which handle different aspects of the project. This readme will describe the purpose of each of these scripts, and the conclusions drawn from the data analysis.
 
 ## download_images.py
