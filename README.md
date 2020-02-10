@@ -1,5 +1,6 @@
 # Landscape
-Create and analyze a dataset of landscape photos scraped from Reddit. The repository contains four python scripts (download_images.py, image_recognition.py, and analyze.py) which handle different aspects of the project. This readme will describe the purpose of each of these scripts, and explain how to run them.
+The goal of this project was to create and analyze a dataset of landscape photos scraped from reddit, mostly for curiosity about what kinds of images redditors are posting and upvoting in this subreddit.
+The repository contains three python scripts (download_images.py, image_recognition.py, and analyze.py) which handle different aspects of the project. This readme will describe the purpose of each of these scripts, and the conclusions drawn from the data analysis.
 
 ## download_images.py
 This script uses the Pushift Python API (https://github.com/pushshift/api) to retrive information about landscape images posted to the subreddit r/earthporn.
@@ -39,6 +40,6 @@ I also tried other machine learning models such as Random Forest regression and 
 A possibly more useful metric than R^2 is the comparison accuracy, which answers the following question: given two images randomly selected from the dataset, can the model correctly predict which one has the higher reddit score?
 The probabilty that the model predicts this correctly is the comparison accuracy.
 This metric can actually be computed in O(nlogn) rather than O(n^2) using a variant of the merge sort algorithm, which I've implemented in analyze.py.
-The linear regression model actually achieves a comparison accuracy of 82.4% on the test set (82.9% on the training set), which is significantly better than random guessing (50%).
+The linear regression model gives a comparison accuracy of 82.4% on the test set (82.9% on the training set), which is significantly better than random guessing (50%).
 
 
