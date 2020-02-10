@@ -18,15 +18,26 @@ First, I reduce the continuous probablities into discrete tags by setting a tagg
 For example, if a given image is predicted to be a mountain with >30% confidence, I tag it as a mountain.
 Each image can have anywhere from 0 to 3 tags.
 The most common tags are shown in the first figure.
-It makes sense that scenic locations like waterfalls and snowy mountains are popular to post.
 
 ![common_tags.png](https://github.com/tennessejoyce/Landscape/blob/master/common_tags.png)
 
-The next figure shown the top scoring tags, which is surprisingly quite different from the most common.
+It makes sense that scenic locations like waterfalls and snowy mountains are popular to post.
+Some examples (randomly selected) of these top 3 classes are shown below.
+![valley_examples.png](https://github.com/tennessejoyce/Landscape/blob/master/valley_examples.png)
+![waterfall_examples.png](https://github.com/tennessejoyce/Landscape/blob/master/waterfall_examples.png)
+![mountain_snowy_examples.png](https://github.com/tennessejoyce/Landscape/blob/master/mountain_snowy_examples.png)
+
+The next figure shows the top scoring tags, which is surprisingly quite different from the most common.
 To curb the effect of outliers, I've used the geometric mean to compute the average score of each class.
 I also disqualified classes with fewer than 100 images. 
 
 ![top_scoring_tags.png](https://github.com/tennessejoyce/Landscape/blob/master/top_scoring_tags.png)
+
+
+Randomly selected examples of these tags are shown below.
+
+![cultivated_field_examples.png](https://github.com/tennessejoyce/Landscape/blob/master/cultivated_field_examples.png)
+![volcano_examples.png](https://github.com/tennessejoyce/Landscape/blob/master/volcano_examples.png)
 
 Lastly, I used a linear regression model, as implemented in scikit-learn, to attempt to predict the score using the output features of the convolutional neural network.
 Because both the scores and probabilitities have widely varying orders of magnitude, I used the raw output of the network (i.e. before applying the softmax to get probabilities) and the logarithm of the score to do this linear regression.
