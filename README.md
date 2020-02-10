@@ -36,7 +36,7 @@ I also disqualified classes with fewer than 100 images.
 
 Randomly selected examples of these tags are shown below.
 
-![cultivated_field_examples.png](https://github.com/tennessejoyce/Landscape/blob/master/cultivated_field_examples.png)
+![field_cultivated_examples.png](https://github.com/tennessejoyce/Landscape/blob/master/field_cultivated_examples.png)
 ![volcano_examples.png](https://github.com/tennessejoyce/Landscape/blob/master/volcano_examples.png)
 
 Lastly, I used a linear regression model, as implemented in scikit-learn, to attempt to predict the score using the output features of the convolutional neural network.
