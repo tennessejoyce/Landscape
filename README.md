@@ -1,17 +1,17 @@
-## Landscape
-Create and analyze a dataset of landscape photos scraped from Reddit. The repository contains four python scripts (scrape.py, tag.py, analyze.py, finetune.py) which handle different aspects of the project. This readme will describe the purpose of each of these scripts, and explain how to run them.
+# Landscape
+Create and analyze a dataset of landscape photos scraped from Reddit. The repository contains four python scripts (download_images.py, image_recognition.py, and analyze.py) which handle different aspects of the project. This readme will describe the purpose of each of these scripts, and explain how to run them.
 
-# download_images.py
+## download_images.py
 This script uses the Pushift Python API (https://github.com/pushshift/api) to retrive information about landscape images posted to the subreddit r/earthporn.
 The script also saves additional information like the title of the post, the username of the redditor who posted it, the time when it was posted, and the score of the post (# of upvotes - # of downvotes).
 I used this script to collect all landscape images posted to r/earthporn in 2019, excluding those with a score of 1 or less (which are likely to be missing data or spam posts).
 This amounts to 36,760 images.
 
-# image_recognition.py
+## image_recognition.py
 This script determines the content of the landscape images downloaded from reddit using the pretrained Places365 ResNet50 architecture (https://github.com/CSAILVision/places365).
 The convolutional neural network classifies the (previously unlabeled) images into 365 different types of locations, like mountain, lake, forest, etc.
 
-# analyze.py
+## analyze.py
 After downloading and classifying the images, I performed an exploratory analysis on the dataset, using the code in analyze.py.
 First, I reduce the continuous probablities into discrete tags by setting a tagging threshold at 30%.
 For example, if a given image is predicted to be a mountain with >30% confidence, I tag it as a mountain.
