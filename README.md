@@ -42,4 +42,11 @@ The probabilty that the model predicts this correctly is the comparison accuracy
 This metric can actually be computed in O(nlogn) rather than O(n^2) using a variant of the merge sort algorithm, which I've implemented in analyze.py.
 The linear regression model gives a comparison accuracy of 82.4% on the test set (82.9% on the training set), which is significantly better than random guessing (50%).
 
+## Conclusions
+Image recognition methods like convolutional neural networks can be powerful tools for drawing conclusions from an unlabeled dataset of images.
+Using this approach, we can answer questions like which types of landscape images are most commonly posted, and which are the most popular.
+I've also shown that the output of the neural network can be used as a predictor of how well a post will do.
+While there are certainly many other factors beyond just the content of the image (such as aesthetics, or a descriptive post title) which determine its success, a content-based predictor is a good start.
+In particular, the predictive model developed here was able to predict with 82.4% accuracy which of two candidate images would recieve a higher reddit score.
+
 
