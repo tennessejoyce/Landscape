@@ -1,13 +1,46 @@
 ## Landscape
 Create and analyze a dataset of landscape photos scraped from Reddit. The repository contains four python scripts (scrape.py, tag.py, analyze.py, finetune.py) which handle different aspects of the project. This readme will describe the purpose of each of these scripts, and explain how to run them.
 
-#scrape.py
-This script uses the Python Reddit API Wrapper (PRAW -- https://praw.readthedocs.io/en/latest/) to scrape landscape photos as they are posted to reddit. In addition to downloading the photos, additional information about the posts is written to post_info.csv including the title of the post, the username of the redditor who posted it, the time when it was posted, and the score of the post (# of upvotes - # of downvotes).
+#download_images.py
+This script uses the Pushift Python API (https://github.com/pushshift/api) to retrive information about landscape images posted to the subreddit r/earthporn.
+The script also saves additional information like the title of the post, the username of the redditor who posted it, the time when it was posted, and the score of the post (# of upvotes - # of downvotes).
+I used this script to collect all landscape images posted to r/earthporn in 2019, excluding those with a score of 1 or less (which are likely to be missing data or spam posts).
+This amounts to 36,760 images.
+
+#image_recognition.py
+This script determines the content of the landscape images downloaded from reddit using the pretrained Places365 ResNet50 architecture (https://github.com/CSAILVision/places365).
+The convolutional neural network classifies the (previously unlabeled) images into 365 different types of locations, like mountain, lake, forest, etc.
+
+#analyze.py
+After downloading and classifying the images, I performed an exploratory analysis on the dataset, using the code in analyze.py.
+First, I reduce the continuous probablities into discrete tags by setting a tagging threshold at 30%.
+For example, if a given image is predicted to be a mountain with >30% confidence, I tag it as a mountain.
+Each image can have anywhere from 0 to 3 tags.
 
 
 ![common_tags.png](https://github.com/tennessejoyce/Landscape/blob/master/common_tags.png)
 
+The most common tags are shown in the first figure.
+It makes sense that scenic locations like waterfalls and snowy mountains are popular to post.
+
 ![top_scoring_tags.png](https://github.com/tennessejoyce/Landscape/blob/master/top_scoring_tags.png)
 
+The next figure shown the top scoring tags, which is surprisingly quite different from the most common.
+To curb the effect of outliers, I've used the geometric mean to compute the average score of each class.
+I also disqualified classes with fewer than 100 images. 
+
+![actual_vs_predicted.png](https://github.com/tennessejoyce/Landscape/blob/master/actual_vs_predicted.png)
+
+Lastly, I used a linear regression model, as implemented in scikit-learn, to attempt to predict the score using the output features of the convolutional neural network.
+Because both the scores and probabilitities have widely varying orders of magnitude, I used the raw output of the network (i.e. before applying the softmax to get probabilities) and the logarithm of the score to do this linear regression.
+I reserved 20% of the images (selected at random) for a test set, which was not used in the training phase.
+In the third figure above, I plot the joint distribution of actual and predicted scores for that test set.
+The fit has an R^2 value of 0.22 on the test set (0.24 on the training set), suggesting that there are other important factors and/or randomness involved in the reddit score of an image.
+I also tried other machine learning models such as Random Forest regression and a small fully-connected neural network (both implemented in scikit-learn as well), but these actually performed worse than the linear regression model, even after much parameter tuning.
+
+Another metric is the comparison accuracy, which answers the following question: given two images randomly selected from the dataset, can the model correctly predict which one has the higher reddit score?
+The probabilty that the model predicts this correctly is the comparison accuracy.
+This metric can actually be computed in O(nlogn) rather than O(n^2) using a variant of the merge sort algorithm, which I've implemented in analyze.py.
+The linear regression model actually achieves a comparison accuracy of 82.4% on the test set (82.9% on the training set), which is significantly better than random guessing (50%).
 
 
