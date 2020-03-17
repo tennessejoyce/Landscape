@@ -15,9 +15,9 @@ from sklearn.neighbors import KNeighborsRegressor
 from scipy.stats import gaussian_kde
 
 
-#Read in the extracted features.
+#Read in the output features from the neural network.
 features = pd.read_csv('features.csv',index_col=0)
-#Columns associated with content features.
+#Remove the the first four columns, which have other information.
 content_features = features.iloc[:,4:]
 #Use softmax to compute probabilities.
 probabilities = softmax(content_features,axis=1)
@@ -56,9 +56,10 @@ plt.savefig('top_scoring_tags.png')
 plt.close()
 
 
-
+#Computes the sorting accuracy: given two images at random, can
+#the model predict which gets a higher reddit score?
 def sort_criterion(y_pred,y_exact):
-	#Convert the score back to an integer, to avoid precision loss.
+	#Convert the score back to an integer.
 	integer_exact = np.rint(np.exp(y_exact)-1)
 	#Sort the actual scores by their predicted ranking.
 	partial_sorted = integer_exact[np.argsort(y_pred)]
@@ -69,8 +70,8 @@ def sort_criterion(y_pred,y_exact):
 	#Return the probability that a given pair is out of order.
 	return 1-misses/total
 
+#Uses a variant of merge sort to compute the number of inversions in O(n log n).
 def count_inversions(a):
-	#Uses merge sort to compute the number of inversions.
 	if len(a)==1:
 		#Base case for recursion.
 		return 0
@@ -99,6 +100,8 @@ def count_inversions(a):
 
 
 #Train a model to predict the score, based on ResNet output.
+
+#Independent and dependent variables.
 X = content_features.values
 y = features.log_score
 
@@ -115,9 +118,8 @@ y_train = scaler_y.transform(y_train[:,None])[:,0]
 y_test = scaler_y.transform(y_test[:,None])[:,0]
 
 
-#Fit a linear model.
+#Fit a linear model to the training data.
 model = LinearRegression()
-#Fit to the training data.
 model.fit(X_train,y_train)
 #Make predictions on the train and test sets
 y_pred_train = model.predict(X_train)
