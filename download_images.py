@@ -22,8 +22,8 @@ def age_string(utc_time):
 	days = (age_in_seconds//3600)//24
 	return f'{days}d {hours}h {minutes}m {seconds}s'
 
+#Only accept urls from reddit and imgur with jpg filetype.
 def good_url(s):
-	#Only accept urls from reddit and imgur with jpg filetype.
 	out = s.startswith('https://i.redd.it')
 	out = out or s.startswith('https://i.imgur.com')
 	out = out and s.endswith('.jpg')
@@ -31,11 +31,11 @@ def good_url(s):
 
 collect_post_info = False
 if collect_post_info:
-	#Generator for searching arbitrarily far back. Be careful with it.
+	#Generator for searching arbitrarily far back.
 	gen = api.search_submissions(limit=200000,subreddit='earthporn')
-	#How far back to go for post history (one year in the past).
-	min_utc = 1546300800
-	max_utc = 1577836800
+	#Time range to collect posts from.
+	min_utc = 1546300800  #Jan 1, 2019
+	max_utc = 1577836800  #Jan 1, 2020
 
 	for i,p in enumerate(gen):
 		if p.created_utc < min_utc:
@@ -66,6 +66,7 @@ else:
 		print('Could not find post_info.csv. Please set collect_post_info=True to create the file.')
 		exit()
 
+#Download an image from "url" and saves it to "filename".
 def download_image(url,filename):
 	if os.path.exists(filename):
 		print('Image %s already exists. Skipping download.' % filename)
@@ -93,12 +94,15 @@ def download_image(url,filename):
 		print('Warning: Failed to save image')
 		return False
 
+#Directory to store the images in.
 photos_dir = 'photos2/all_images'
 download_images = False
 if download_images:
 	if not os.path.exists(photos_dir):
 		os.mkdir(photos_dir)
+	#Store the ids of images which are successfully downloaded.
 	good_images = []
+	#Loop through each post and download the associated image.
 	for i,(post_id,row) in enumerate(post_info.iterrows()):
 		print(i,post_id)
 		filename = f"{photos_dir}/{post_id}.jpg"
