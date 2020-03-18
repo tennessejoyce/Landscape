@@ -4,14 +4,9 @@ import matplotlib.pyplot as plt
 from scipy.special import softmax
 from scipy.stats.mstats import gmean
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression, ElasticNet
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import StandardScaler
-from inversions import mergeSort
-from xgboost import XGBRegressor
-from sklearn.neural_network import MLPRegressor
-from sklearn.neighbors import KNeighborsRegressor
 from scipy.stats import gaussian_kde
 
 
@@ -56,7 +51,7 @@ plt.savefig('top_scoring_tags.png')
 plt.close()
 
 
-#Computes the sorting accuracy: given two images at random, can
+#Computes the comparison accuracy: given two images at random, can
 #the model predict which gets a higher reddit score?
 def sort_criterion(y_pred,y_exact):
 	#Convert the score back to an integer.
@@ -137,3 +132,26 @@ test_acc = sort_criterion(y_pred_test,y_test)
 print(f'Train_acc: {train_acc}')
 print(f'Test_acc: {test_acc}')
 
+
+#Makes a scatter plot where each point is colored according to the local point density.
+def density_plot(x,y):
+	#Use kernel density estimation to color the points.
+	points = np.vstack([x,y])
+	density = gaussian_kde(points)(points)
+	#Sort the points so that the highest densities appear on top. This looks a bit better.
+	idx = density.argsort()
+	x,y,density = x[idx], y[idx], density[idx]
+	#Draw the scatter plot.
+	plt.scatter(x, y, c=density, s=5)
+
+#Plot predicted vs actual on a log scale.
+density_plot(scaler_y.inverse_transform(y_pred_test),scaler_y.inverse_transform(y_test))
+lims = np.array(range(6))
+plt.plot(lims,lims,color='black')
+plt.xticks(lims,labels=10**lims)
+plt.yticks(lims,labels=10**lims)
+plt.xlabel('Predicted score')
+plt.ylabel('Actual score')
+plt.title('Actual vs. predicted score')
+plt.tight_layout()
+plt.savefig('actual_vs_predicted.png',dpi=500)
